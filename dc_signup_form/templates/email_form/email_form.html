@@ -1,0 +1,10 @@
+{% load dc_forms %}
+{% if not messages %}
+  <form id="signup_form" method="post" action="{% url 'email_signup_view' %}?{{ request.META.QUERY_STRING }}">
+    {% csrf_token %}
+    <div class="form-group">
+      {{ signup_form|dc_form }}
+    </div>
+    <button type="submit" class="button">Join us</button>
+  </form>
+{% endif %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+
+{% block content %}
+
+<div class="row">
+  <div class="columns large-8">
+    <div class="card">
+      <h3>Join our mailing list</h3>
+{% include "email_form/email_form.html" %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
