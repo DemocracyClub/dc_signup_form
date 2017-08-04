@@ -30,6 +30,8 @@ TEMPLATES = [
         },
     }
 ]
+
+SENDGRID_API_KEY = 'f00b42'
 ```
 
 Default:
@@ -61,12 +63,14 @@ url(
 Use as a standalone view, or display the form inline:
 
 ```
-<div class="row">
-  <div class="columns large-12">
-    <div class="card">
-      Sign up for our mailing list to receive election reminders
-      {% include "email_form/email_form.html" %}
+{% if not messages %}
+  <div class="row">
+    <div class="columns large-12">
+      <div class="card">
+        Sign up for our mailing list to receive election reminders
+        {% include "email_form/email_form.html" %}
+      </div>
     </div>
   </div>
-</div>
+{% endif %}
 ```

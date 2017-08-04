@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils.http import is_safe_url
 from django.views.generic import FormView
 from .forms import EmailSignupForm
-from .wrappers import SendGridWrapper, TestWrapper
+from .wrappers import DCSendGridWrapper, TestWrapper
 
 
 class SignupFormView(FormView):
@@ -17,7 +17,7 @@ class SignupFormView(FormView):
 
     backends = {
         'test': TestWrapper(),
-        'sendgrid': SendGridWrapper()
+        'sendgrid': DCSendGridWrapper()
     }
     backend = 'test'
 

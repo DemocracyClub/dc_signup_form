@@ -11,4 +11,7 @@ setup(
     include_package_data=True,
     description='Email Signup form component for use on DC websites',
     url='https://github.com/DemocracyClub/dc_signup_form',
+    install_requires=[
+        'requests',
+    ]
 )
