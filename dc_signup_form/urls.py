@@ -7,7 +7,7 @@ urlpatterns = [
         r'^$',
         SignupFormView.as_view(
             backend='sendgrid',
-            mailing_lists=['main list', 'election reminders']
+            mailing_lists=['main list']
         ),
         name='email_signup_view'),
 ]
