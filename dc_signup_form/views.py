@@ -3,7 +3,11 @@ from django.urls import reverse
 from django.utils.http import is_safe_url
 from django.views.generic import FormView
 from .forms import EmailSignupForm
-from .wrappers import DCSendGridWrapper, TestWrapper
+from .backends import (
+    LocalDbBackend,
+    RemoteDbBackend,
+    TestBackend,
+)
 
 
 class SignupFormView(FormView):
@@ -16,10 +20,11 @@ class SignupFormView(FormView):
     thanks_message = "Thanks for joining. We'll be in touch soon!"
 
     backends = {
-        'test': TestWrapper(),
-        'sendgrid': DCSendGridWrapper()
+        'test': TestBackend(),
+        'local_db': LocalDbBackend(),
+        'remote_db': RemoteDbBackend(),
     }
-    backend = 'test'
+    backend = 'remote_db'
 
     def get_success_url(self):
         messages.success(
