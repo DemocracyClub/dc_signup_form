@@ -11,7 +11,9 @@ git+git://github.com/DemocracyClub/dc_base_theme.git
 git+git://github.com/DemocracyClub/dc_signup_form.git
 ```
 
-## Usage
+## Configuration
+
+Using the remote backend (default):
 
 ```python
 INSTALLED_APPS = [
@@ -31,16 +33,43 @@ TEMPLATES = [
     }
 ]
 
+EMAIL_SIGNUP_API_KEY = 'f00b42'
+EMAIL_SIGNUP_ENDPOINT = 'https://foo.bar/baz/'
+```
+
+Using the local backend:
+
+```python
+INSTALLED_APPS = [
+    ...
+    'dc_signup_form',
+    'dc_signup_form.signup_server',
+]
+
+TEMPLATES = [
+    {
+        ...
+        'OPTIONS': {
+            'context_processors': [
+                ...
+                'dc_signup_form.context_processors.signup_form',
+            ],
+        },
+    }
+]
+
 SENDGRID_API_KEY = 'f00b42'
 ```
 
-Default:
+## Usage
+
+Default route:
 
 ```python
 url(r'^mailing_list/', include('dc_signup_form.urls')),
 ```
 
-Custom:
+Custom route:
 
 ```python
 from dc_signup_form.views import SignupFormView
@@ -54,7 +83,7 @@ url(
             'source': 'EveryElection',
         },
         thanks_message="Thanks for joining. We'll also send you a reminder when there's an upcoming election in your area",
-        backend='sendgrid'
+        backend='local_db'
     ),
     name='email_signup_view'
 ),
