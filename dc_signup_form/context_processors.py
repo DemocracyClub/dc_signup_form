@@ -1,4 +1,4 @@
-from .forms import EmailSignupForm
+from .forms import ElectionRemindersSignupForm, MailingListSignupForm
 
 
 def signup_form(request):
@@ -8,9 +8,15 @@ def signup_form(request):
 
     if request.POST:
         return {
-            'signup_form': EmailSignupForm(initial=initial, data=request.POST)
+            'mailing_list_form': MailingListSignupForm(
+                initial=initial, data=request.POST),
+            'election_reminders_form': ElectionRemindersSignupForm(
+                initial=initial, data=request.POST),
         }
     else:
         return {
-            'signup_form': EmailSignupForm(initial=initial)
+            'mailing_list_form': MailingListSignupForm(
+                initial=initial),
+            'election_reminders_form': ElectionRemindersSignupForm(
+                initial=initial),
         }

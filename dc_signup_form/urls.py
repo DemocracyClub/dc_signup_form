@@ -1,12 +1,23 @@
 from django.conf.urls import url
 
+from .forms import ElectionRemindersSignupForm, MailingListSignupForm
 from .views import SignupFormView
 
 urlpatterns = [
     url(
-        r'^$',
+        r'^mailing_list/$',
         SignupFormView.as_view(
-            mailing_lists=['main list']
+            template_name='email_form/mailing_list_form_view.html',
+            form_class=MailingListSignupForm
         ),
-        name='email_signup_view'),
+        name='mailing_list_signup_view'),
+    url(
+        r'^election_reminders/$',
+        SignupFormView.as_view(
+            template_name='email_form/election_reminders_form_view.html',
+            form_class=ElectionRemindersSignupForm,
+            get_vars=['postcode'],
+            thanks_message="Thanks for joining. We'll send you a reminder when there's an upcoming election in your area",
+        ),
+        name='election_reminders_signup_view'),
 ]

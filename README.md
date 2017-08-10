@@ -66,7 +66,7 @@ SENDGRID_API_KEY = 'f00b42'
 Default route:
 
 ```python
-url(r'^mailing_list/', include('dc_signup_form.urls')),
+url(r'^emails/', include('dc_signup_form.urls')),
 ```
 
 Custom route:
@@ -77,15 +77,16 @@ from dc_signup_form.views import SignupFormView
 url(
     r'^mailing_list/',
     SignupFormView.as_view(
-        mailing_lists=['main list', 'election reminders'],
+        template_name='email_form/mailing_list_form_view.html',
+        form_class=MailingListSignupForm,
         get_vars=['postcode'],
         extras={
             'source': 'EveryElection',
         },
-        thanks_message="Thanks for joining. We'll also send you a reminder when there's an upcoming election in your area",
+        thanks_message="My custom thanks message",
         backend='local_db'
     ),
-    name='email_signup_view'
+    name='mailing_list_signup_view'),
 ),
 ```
 
@@ -97,7 +98,7 @@ Use as a standalone view, or display the form inline:
     <div class="columns large-12">
       <div class="card">
         Sign up for our mailing list to receive election reminders
-        {% include "email_form/email_form.html" %}
+        {% include "email_form/election_reminders_form.html" %}
       </div>
     </div>
   </div>

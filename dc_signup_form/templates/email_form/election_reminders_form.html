@@ -1,9 +1,9 @@
 {% load dc_forms %}
 {% if not messages %}
-  <form id="signup_form" method="post" action="{% url 'email_signup_view' %}?{{ request.META.QUERY_STRING }}">
+  <form id="mailing_list_form" method="post" action="{% url 'election_reminders_signup_view' %}?{{ request.META.QUERY_STRING }}">
     {% csrf_token %}
     <div class="form-group">
-      {{ signup_form|dc_form }}
+      {{ election_reminders_form|dc_form }}
     </div>
     <button type="submit" class="button">Join us</button>
   </form>
