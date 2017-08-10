@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.urlresolvers import NoReverseMatch
 from django.urls import reverse
 from django.utils.http import is_safe_url
 from django.views.generic import FormView
@@ -30,9 +31,19 @@ class SignupFormView(FormView):
             self.request, self.thanks_message)
 
         source_url = self.request.POST.get('source_url')
+
+        try:
+            mailing_list_signup_view = reverse('mailing_list_signup_view')
+        except NoReverseMatch:
+            mailing_list_signup_view = ''
+        try:
+            election_reminders_signup_view = reverse('election_reminders_signup_view')
+        except NoReverseMatch:
+            election_reminders_signup_view = ''
+
         if is_safe_url(source_url) and\
-            source_url != reverse('mailing_list_signup_view') and\
-            source_url != reverse('election_reminders_signup_view'):
+            source_url != mailing_list_signup_view and\
+            source_url != election_reminders_signup_view:
             return source_url
         else:
             return "/"
