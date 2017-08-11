@@ -91,7 +91,7 @@ email_urls = [
 
 # any custom urls we create must be declared in the 'dc_signup_form' namespace
 urlpatterns += [
-    url(r'^mailing_list/$',
+    url(r'^mailing_list/',
         include(email_urls, 'dc_signup_form', 'dc_signup_form')
     ),
 ]
