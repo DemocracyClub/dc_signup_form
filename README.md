@@ -69,6 +69,11 @@ Default routes:
 url(r'^emails/', include('dc_signup_form.urls')),
 ```
 
+Routes for local backend:
+```python
+url(r'^emails/api_signup/', include('dc_signup_form.signup_server.urls')),
+```
+
 Custom routes:
 
 ```python
@@ -97,9 +102,16 @@ urlpatterns += [
 ]
 ```
 
-Use as a standalone view, or display the form inline:
+Use as a standalone view
 
+```django
+<a href="{% url 'dc_signup_form:mailing_list_signup_view' %}">Mailing List</a>
 ```
+
+
+or display the form inline:
+
+```django
 {% if not messages %}
   <div class="row">
     <div class="columns large-12">
