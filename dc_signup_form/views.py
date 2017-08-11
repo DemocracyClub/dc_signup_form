@@ -33,11 +33,13 @@ class SignupFormView(FormView):
         source_url = self.request.POST.get('source_url')
 
         try:
-            mailing_list_signup_view = reverse('mailing_list_signup_view')
+            mailing_list_signup_view = reverse(
+                'dc_signup_form:mailing_list_signup_view')
         except NoReverseMatch:
             mailing_list_signup_view = ''
         try:
-            election_reminders_signup_view = reverse('election_reminders_signup_view')
+            election_reminders_signup_view = reverse(
+                'dc_signup_form:election_reminders_signup_view')
         except NoReverseMatch:
             election_reminders_signup_view = ''
 

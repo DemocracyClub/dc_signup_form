@@ -3,6 +3,7 @@ from django.conf.urls import url
 from .forms import ElectionRemindersSignupForm, MailingListSignupForm
 from .views import SignupFormView
 
+app_name = 'dc_signup_form'
 urlpatterns = [
     url(
         r'^mailing_list/$',

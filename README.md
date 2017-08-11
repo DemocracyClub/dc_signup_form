@@ -63,31 +63,38 @@ SENDGRID_API_KEY = 'f00b42'
 
 ## Usage
 
-Default route:
+Default routes:
 
 ```python
 url(r'^emails/', include('dc_signup_form.urls')),
 ```
 
-Custom route:
+Custom routes:
 
 ```python
 from dc_signup_form.views import SignupFormView
 
-url(
-    r'^mailing_list/',
-    SignupFormView.as_view(
-        template_name='email_form/mailing_list_form_view.html',
-        form_class=MailingListSignupForm,
-        get_vars=['postcode'],
-        extras={
-            'source': 'EveryElection',
-        },
-        thanks_message="My custom thanks message",
-        backend='local_db'
+email_urls = [
+    url(r'^$',
+        SignupFormView.as_view(
+            template_name='email_form/mailing_list_form_view.html',
+            form_class=MailingListSignupForm,
+            get_vars=['postcode'],
+            extras={
+                'source': 'EveryElection',
+            },
+            thanks_message="My custom thanks message",
+            backend='local_db'
+        ),
+        name='mailing_list_signup_view'),
+]
+
+# any custom urls we create must be declared in the 'dc_signup_form' namespace
+urlpatterns += [
+    url(r'^mailing_list/$',
+        include(email_urls, 'dc_signup_form', 'dc_signup_form')
     ),
-    name='mailing_list_signup_view'),
-),
+]
 ```
 
 Use as a standalone view, or display the form inline:
