@@ -1,25 +1,50 @@
+import json
 import sys
 import time
 from django.core.management.base import BaseCommand
+from django.db import connection
+from django.db.backends.postgresql_psycopg2.version import get_version
 from dc_signup_form.signup_server.models import SignupQueue
 from dc_signup_form.signup_server.wrappers import DCSendGridWrapper
 
 
 class Command(BaseCommand):
 
+    """
+    Prior to Postgres 9.4 json type does not have a notion of equality so we
+    need to cast to text in these functions for Postgres 9.3. This means that
+    {"a": "b", "c": "d"} != {"c": "d", "a": "b"}
+    (conversely with a jsonb column, those 2 are equal)
+    but for our purposes this will do the job
+    """
+
     def get_unique_mailing_lists(self):
-        return SignupQueue\
-            .objects\
-            .all()\
-            .filter(added=False)\
-            .values('mailing_lists')\
-            .distinct('mailing_lists')
+        if get_version(connection) < 90400:
+            cursor = connection.cursor()
+            cursor.execute("""SELECT
+                DISTINCT(mailing_lists::text) AS mailing_lists
+                FROM signup_server_signupqueue;""")
+            results = cursor.fetchall()
+            return [{'mailing_lists': json.loads(row[0])} for row in results]
+        else:
+            return SignupQueue\
+                .objects\
+                .all()\
+                .filter(added=False)\
+                .values('mailing_lists')\
+                .distinct('mailing_lists')
 
     def get_new_users(self, mailing_lists):
-        return SignupQueue.objects.all().filter(
-            added=False,
-            mailing_lists=mailing_lists
-        )
+        if get_version(connection) < 90400:
+            return SignupQueue.objects.raw("""
+                SELECT * FROM signup_server_signupqueue
+                WHERE added=False
+                AND mailing_lists::text=%s""", [json.dumps(mailing_lists)])
+        else:
+            return SignupQueue.objects.all().filter(
+                added=False,
+                mailing_lists=mailing_lists
+            )
 
     def handle(self, *args, **kwargs):
 

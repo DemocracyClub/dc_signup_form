@@ -1,7 +1,15 @@
 import binascii
 import os
 from django.db import models
+from django.db.backends.postgresql_psycopg2.version import get_version
 from django.contrib.postgres.fields import JSONField
+
+
+class BackwardsCompatibleJSONField(JSONField):
+    def db_type(self, connection):
+        if get_version(connection) < 90400:
+            return 'json'
+        return 'jsonb'
 
 
 class Token(models.Model):
@@ -21,7 +29,7 @@ class Token(models.Model):
 
 class SignupQueue(models.Model):
     email = models.EmailField()
-    data = JSONField()
-    mailing_lists = JSONField()
+    data = BackwardsCompatibleJSONField()
+    mailing_lists = BackwardsCompatibleJSONField()
     added = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
