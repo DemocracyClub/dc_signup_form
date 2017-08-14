@@ -7,8 +7,8 @@ class DCSendGridWrapper:
 
     BASE_URL = 'https://api.sendgrid.com/v3'
     SENDGRID_LISTS = {
-        'main list': 1246575,
-        'election reminders': 1342244,
+        'main_list': 1246575,
+        'election_reminders': 1342244,
     }
 
     # list of properties we shouldn't pass to SendGrid
