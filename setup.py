@@ -6,6 +6,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='dc_signup_form',
+    version='1.0.0',
     author="chris48s",
     packages=find_packages(),
     include_package_data=True,
