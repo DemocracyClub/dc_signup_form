@@ -1,7 +1,13 @@
+import django
 import requests
 import json
+from distutils.version import StrictVersion
 from django.conf import settings
-from dc_signup_form.signup_server.models import SignupQueue
+from django.core.exceptions import ImproperlyConfigured
+try:
+    from dc_signup_form.signup_server.models import SignupQueue
+except ImportError:
+    pass
 
 
 class TestBackend:
@@ -15,12 +21,19 @@ class TestBackend:
 class LocalDbBackend:
 
     def submit(self, data, mailing_lists):
-        record = SignupQueue(
-            email=data['email'],
-            data=data,
-            mailing_lists=mailing_lists
-        )
-        record.save()
+        try:
+            record = SignupQueue(
+                email=data['email'],
+                data=data,
+                mailing_lists=mailing_lists
+            )
+            record.save()
+        except NameError:
+            if StrictVersion(django.get_version()) < '1.9.0':
+                raise ImproperlyConfigured(
+                    'LocalDbBackend requires Django 1.9 or later')
+            else:
+                raise
 
 
 class RemoteDbBackend:
