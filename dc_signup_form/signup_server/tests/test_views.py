@@ -1,8 +1,16 @@
+import django
 import json
+import unittest
+from distutils.version import StrictVersion
 from django.test import TestCase, RequestFactory
-from dc_signup_form.signup_server.views import SignupQueue, Token
-from dc_signup_form.signup_server.views import email_signup
+try:
+    from dc_signup_form.signup_server.views import SignupQueue, Token
+    from dc_signup_form.signup_server.views import email_signup
+except ImportError:
+    pass
 
+@unittest.skipIf(StrictVersion(django.get_version()) < '1.9.0',
+    'LocalDbBackend requires Django 1.9 or later')
 class TestSignupView(TestCase):
 
     def setUp(self):
