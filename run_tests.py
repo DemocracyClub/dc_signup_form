@@ -14,13 +14,18 @@ if not settings.configured:
         DEBUG=True,
         DATABASES={
             'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': ':memory:',
+                'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                'NAME': 'test',
+                'USER': 'postgres',
+                'PASSWORD': '',
+                'HOST': '',
+                'PORT': '',
             }
         },
         INSTALLED_APPS=(
             'django.contrib.contenttypes',
             'dc_signup_form',
+            'dc_signup_form.signup_server',
         ),
         TEMPLATES=[
             {
