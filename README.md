@@ -1,5 +1,8 @@
 # DC Signup Form
 
+[![Build Status](https://travis-ci.org/DemocracyClub/dc_signup_form.svg?branch=master)](https://travis-ci.org/DemocracyClub/dc_signup_form)
+[![Coverage Status](https://coveralls.io/repos/github/DemocracyClub/dc_signup_form/badge.svg?branch=master)](https://coveralls.io/github/DemocracyClub/dc_signup_form?branch=master)
+
 Django app with Email signup form for use on Democracy Club websites
 
 ## Installation

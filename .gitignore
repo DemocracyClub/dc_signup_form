@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
+.coverage
 build/
 dist/
 dc_signup_form.egg-info/
