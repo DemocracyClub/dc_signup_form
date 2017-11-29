@@ -4,6 +4,7 @@ import time
 from django.core.management.base import BaseCommand
 from django.db import connection
 from django.db.backends.postgresql_psycopg2.version import get_version
+from django.db.models import Q
 from dc_signup_form.signup_server.models import SignupQueue
 from dc_signup_form.signup_server.wrappers import DCSendGridWrapper
 
@@ -39,9 +40,11 @@ class Command(BaseCommand):
             return SignupQueue.objects.raw("""
                 SELECT * FROM signup_server_signupqueue
                 WHERE added=False
+                AND email<>'testy.mctest@democracyclub.org.uk'
                 AND mailing_lists::text=%s""", [json.dumps(mailing_lists)])
         else:
             return SignupQueue.objects.all().filter(
+                ~Q(email="testy.mctest@democracyclub.org.uk"),
                 added=False,
                 mailing_lists=mailing_lists
             )
