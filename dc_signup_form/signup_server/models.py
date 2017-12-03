@@ -1,7 +1,16 @@
 import binascii
 import os
 from django.db import models
-from django.db.backends.postgresql_psycopg2.version import get_version
+
+try:
+    # django < 2.0
+    from django.db.backends.postgresql_psycopg2.version import get_version
+except ImportError:
+    # django >= 2.0
+    from django.db import connection
+    def get_version(connection):
+        return connection.pg_version
+
 from django.contrib.postgres.fields import JSONField
 
 

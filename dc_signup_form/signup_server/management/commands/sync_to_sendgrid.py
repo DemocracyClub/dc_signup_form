@@ -3,7 +3,15 @@ import sys
 import time
 from django.core.management.base import BaseCommand
 from django.db import connection
-from django.db.backends.postgresql_psycopg2.version import get_version
+
+try:
+    # django < 2.0
+    from django.db.backends.postgresql_psycopg2.version import get_version
+except ImportError:
+    # django >= 2.0
+    def get_version(connection):
+        return connection.pg_version
+
 from django.db.models import Q
 from dc_signup_form.signup_server.models import SignupQueue
 from dc_signup_form.signup_server.wrappers import DCSendGridWrapper
