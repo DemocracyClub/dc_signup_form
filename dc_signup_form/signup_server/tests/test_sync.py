@@ -1,16 +1,8 @@
-import django
-import unittest
-from distutils.version import StrictVersion
 from django.test import TestCase
-try:
-    from dc_signup_form.signup_server.views import SignupQueue
-    from dc_signup_form.signup_server.management.commands.sync_to_sendgrid import Command
-except ImportError:
-    pass
+from dc_signup_form.signup_server.views import SignupQueue
+from dc_signup_form.signup_server.management.commands.sync_to_sendgrid import Command
 
 
-@unittest.skipIf(StrictVersion(django.get_version()) < '1.9.0',
-    'LocalDbBackend requires Django 1.9 or later')
 class TestSyncCommand(TestCase):
 
     def test_get_new_users_no_data(self):

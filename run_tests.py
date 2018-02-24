@@ -2,7 +2,6 @@
 import os
 import sys
 import django
-from distutils.version import StrictVersion
 from django.conf import settings
 from django.test.utils import get_runner
 
@@ -11,14 +10,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 root = lambda *x: os.path.join(BASE_DIR, *x)
 
 if not settings.configured:
-
-    INSTALLED_APPS = (
-        'django.contrib.contenttypes',
-        'dc_signup_form',
-    )
-    if StrictVersion(django.get_version()) >= '1.9.0':
-        INSTALLED_APPS += ('dc_signup_form.signup_server',)
-
     settings.configure(
         DEBUG=True,
         DATABASES={
@@ -31,7 +22,11 @@ if not settings.configured:
                 'PORT': '',
             }
         },
-        INSTALLED_APPS=INSTALLED_APPS,
+        INSTALLED_APPS=(
+            'django.contrib.contenttypes',
+            'dc_signup_form',
+            'dc_signup_form.signup_server',
+        ),
         TEMPLATES=[
             {
                 'BACKEND': 'django.template.backends.django.DjangoTemplates',

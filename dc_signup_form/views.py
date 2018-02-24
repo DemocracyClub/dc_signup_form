@@ -1,9 +1,6 @@
 from django.contrib import messages
 from django.core.urlresolvers import NoReverseMatch
-try:
-    from django.urls import reverse
-except ImportError:
-    from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.http import is_safe_url
 from django.views.generic import FormView
 from .forms import EmailSignupForm
