@@ -3,6 +3,7 @@ from django.test import TestCase, RequestFactory
 from dc_signup_form.signup_server.views import SignupQueue, Token
 from dc_signup_form.signup_server.views import email_signup
 
+
 class TestSignupView(TestCase):
 
     def setUp(self):

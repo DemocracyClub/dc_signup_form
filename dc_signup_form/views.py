@@ -3,7 +3,6 @@ from django.core.urlresolvers import NoReverseMatch
 from django.urls import reverse
 from django.utils.http import is_safe_url
 from django.views.generic import FormView
-from .forms import EmailSignupForm
 from .backends import (
     LocalDbBackend,
     RemoteDbBackend,

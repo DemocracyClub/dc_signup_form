@@ -2,6 +2,7 @@ from django.test import TestCase
 from dc_signup_form.forms import (
     ElectionRemindersSignupForm, MailingListSignupForm)
 
+
 class TestForms(TestCase):
 
     def test_mailing_list_form_valid(self):

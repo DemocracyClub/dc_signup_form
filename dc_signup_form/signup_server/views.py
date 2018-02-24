@@ -11,7 +11,7 @@ def email_signup(request):
     if 'HTTP_AUTHORIZATION' not in request.META:
         return HttpResponse(status=403)
     try:
-        auth = Token.objects.get(token=request.META['HTTP_AUTHORIZATION'])
+        Token.objects.get(token=request.META['HTTP_AUTHORIZATION'])
     except Token.DoesNotExist:
         return HttpResponse(status=403)
 
