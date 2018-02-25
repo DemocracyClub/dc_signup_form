@@ -1,23 +1,13 @@
 import binascii
 import os
 from django.db import models
-
-try:
-    # django < 2.0
-    from django.db.backends.postgresql_psycopg2.version import get_version
-except ImportError:
-    # django >= 2.0
-    from django.db import connection
-    def get_version(connection):
-        return connection.pg_version
-
 from django.contrib.postgres.fields import JSONField
 
 
 class BackwardsCompatibleJSONField(JSONField):
+    # retained for legacy reasons
+    # (used to selectively support json/jsonb)
     def db_type(self, connection):
-        if get_version(connection) < 90400:
-            return 'json'
         return 'jsonb'
 
 
