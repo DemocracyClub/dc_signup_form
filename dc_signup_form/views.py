@@ -1,6 +1,5 @@
 from django.contrib import messages
-from django.core.urlresolvers import NoReverseMatch
-from django.urls import reverse
+from django.urls import reverse, NoReverseMatch
 from django.utils.http import is_safe_url
 from django.views.generic import FormView
 from .backends import (
