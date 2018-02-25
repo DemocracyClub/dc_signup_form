@@ -50,10 +50,10 @@ if not settings.configured:
                 },
             }
         ],
-        MIDDLEWARE_CLASSES=(
+        MIDDLEWARE=[
             'django.contrib.sessions.middleware.SessionMiddleware',
             'django.contrib.messages.middleware.MessageMiddleware',
-        ),
+        ],
     )
 
 django.setup()
