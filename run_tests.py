@@ -6,7 +6,7 @@ from django.conf import settings
 from django.test.utils import get_runner
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 root = lambda *x: os.path.join(BASE_DIR, *x)
 
 if not settings.configured:
@@ -24,22 +24,36 @@ if not settings.configured:
         },
         INSTALLED_APPS=(
             'django.contrib.contenttypes',
+            'django.contrib.staticfiles',
+
+            'dc_theme',
+
+            'test_project',
+
             'dc_signup_form',
             'dc_signup_form.signup_server',
         ),
+        ROOT_URLCONF='test_project.urls',
         TEMPLATES=[
             {
                 'BACKEND': 'django.template.backends.django.DjangoTemplates',
                 'APP_DIRS': True,
                 'DIRS': [
-                    root('templates'),
+                    root('test_project/templates'),
                 ],
                 'OPTIONS': {
                     'debug': True,
-                    'context_processors': [],
+                    'context_processors': [
+                        'dc_theme.context_processors.dc_theme_context',
+                        'dc_signup_form.context_processors.signup_form',
+                    ],
                 },
             }
-        ]
+        ],
+        MIDDLEWARE_CLASSES=(
+            'django.contrib.sessions.middleware.SessionMiddleware',
+            'django.contrib.messages.middleware.MessageMiddleware',
+        ),
     )
 
 django.setup()
