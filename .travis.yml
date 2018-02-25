@@ -8,8 +8,10 @@ env:
   matrix:
     - DJANGO_VERSION='>=1.10,<1.11' POSTGRES_VERSION=9.3
     - DJANGO_VERSION='>=1.11,<1.12' POSTGRES_VERSION=9.3
+    - DJANGO_VERSION='>=2.0,<2.1' POSTGRES_VERSION=9.3
     - DJANGO_VERSION='>=1.10,<1.11' POSTGRES_VERSION=9.5
     - DJANGO_VERSION='>=1.11,<1.12' POSTGRES_VERSION=9.5
+    - DJANGO_VERSION='>=2.0,<2.1' POSTGRES_VERSION=9.5
 before_install:
   - echo $POSTGRES_VERSION
   - sudo service postgresql stop && sudo service postgresql start $POSTGRES_VERSION
