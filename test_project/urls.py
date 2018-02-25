@@ -27,5 +27,5 @@ email_patterns = [
 
 
 urlpatterns = [
-    url(r'^emails/', include(email_patterns, namespace='dc_signup_form')),
+    url(r'^emails/', include((email_patterns, 'dc_signup_form'))),
 ]
