@@ -2,4 +2,4 @@ coverage
 psycopg2
 python-coveralls
 
-git+git://github.com/DemocracyClub/dc_base_theme.git@39c3588e7f29e83c9f77dbba0083cd0811321811
+git+git://github.com/DemocracyClub/dc_base_theme.git@0.3.7
