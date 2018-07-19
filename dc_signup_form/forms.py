@@ -1,5 +1,7 @@
 from django import forms
 
+from .constants import ELECTION_REMINDERS_FORM_PREFIX, MAILING_LIST_FORM_PREFIX
+
 
 class EmailSignupForm(forms.Form):
     full_name = forms.CharField(required=True, max_length=1000,
@@ -10,6 +12,9 @@ class EmailSignupForm(forms.Form):
 
 
 class ElectionRemindersSignupForm(EmailSignupForm):
+
+    prefix = ELECTION_REMINDERS_FORM_PREFIX
+
     main_list = forms.BooleanField(
         required=False,
         initial=False,
@@ -20,6 +25,9 @@ class ElectionRemindersSignupForm(EmailSignupForm):
 
 
 class MailingListSignupForm(EmailSignupForm):
+
+    prefix = MAILING_LIST_FORM_PREFIX
+
     main_list = forms.BooleanField(
         initial=True,
         widget=forms.HiddenInput())

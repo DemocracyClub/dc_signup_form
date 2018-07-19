@@ -48,13 +48,26 @@ class SignupFormView(FormView):
         else:
             return "/"
 
-    def form_valid(self, form):
+    def form_invalid(self, form):
+        """
+        Add the form to the context using the form prefix as the var name.
 
+        This is because we use the prefix in the template to render this form,
+        without this we would render the 'clean' form from the context
+        processor, hiding any errors thrown.
+        """
+        context_form_name = form.prefix
+        return self.render_to_response(
+            self.get_context_data(**{context_form_name: form})
+        )
+
+    def form_valid(self, form):
         mailing_lists = []
         data = form.cleaned_data.copy()
 
         # mailing lists
         for lst in self.mailing_lists:
+            key = "-".join([self.form_class.prefix, lst])
             if data.pop(lst, False):
                 mailing_lists.append(lst)
 

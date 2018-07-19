@@ -6,7 +6,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='dc_signup_form',
-    version='2.0.0',
+    version='2.0.1',
     author="chris48s",
     packages=find_packages(),
     include_package_data=True,
@@ -14,5 +14,6 @@ setup(
     url='https://github.com/DemocracyClub/dc_signup_form',
     install_requires=[
         'requests',
+        "Django >=1.10,<2.1"
     ]
 )
