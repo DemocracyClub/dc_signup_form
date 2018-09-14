@@ -1,5 +1,4 @@
 coverage
-psycopg2
 python-coveralls
 
 git+git://github.com/DemocracyClub/dc_base_theme.git@0.3.7
