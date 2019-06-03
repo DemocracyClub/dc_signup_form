@@ -14,7 +14,7 @@ setup(
     url='https://github.com/DemocracyClub/dc_signup_form',
     install_requires=[
         'requests',
-        'Django >=1.10,<2.1',
+        'Django >=1.10,<2.3',
         'psycopg2-binary',
     ]
 )
