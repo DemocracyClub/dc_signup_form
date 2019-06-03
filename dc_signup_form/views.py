@@ -41,7 +41,11 @@ class SignupFormView(FormView):
         except NoReverseMatch:
             election_reminders_signup_view = ''
 
-        if is_safe_url(source_url) and\
+        try:
+            source_url_safe = is_safe_url(source_url, allowed_hosts=None)
+        except TypeError:
+            source_url_safe = is_safe_url(source_url)
+        if source_url_safe and\
             source_url != mailing_list_signup_view and\
             source_url != election_reminders_signup_view:
             return source_url
