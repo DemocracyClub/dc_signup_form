@@ -1,4 +1,3 @@
-coverage
-python-coveralls
+coveralls>=1.10.0
 
 git+git://github.com/DemocracyClub/dc_base_theme.git@0.3.7
