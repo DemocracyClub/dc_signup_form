@@ -16,5 +16,6 @@ setup(
         'requests',
         'Django >=1.10,<2.3',
         'psycopg2-binary',
-    ]
+    ],
+    setup_requires=['wheel']
 )
