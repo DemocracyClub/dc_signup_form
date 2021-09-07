@@ -1,11 +1,11 @@
-from django.conf.urls import include, url
+from django.urls import include, re_path
 
 from dc_signup_form.forms import ElectionRemindersSignupForm, MailingListSignupForm
 from dc_signup_form.views import SignupFormView
 
 
 email_patterns = [
-    url(
+    re_path(
         r'^mailing_list/$',
         SignupFormView.as_view(
             template_name='email_form/mailing_list_form_view.html',
@@ -13,7 +13,7 @@ email_patterns = [
             backend='local_db'
         ),
         name='mailing_list_signup_view'),
-    url(
+    re_path(
         r'^election_reminders/$',
         SignupFormView.as_view(
             template_name='email_form/election_reminders_form_view.html',
@@ -27,5 +27,5 @@ email_patterns = [
 
 
 urlpatterns = [
-    url(r'^emails/', include((email_patterns, 'dc_signup_form'))),
+    re_path(r'^emails/', include((email_patterns, 'dc_signup_form'))),
 ]
