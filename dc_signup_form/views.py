@@ -15,7 +15,7 @@ class SignupFormView(FormView):
     ]  # list of the mailing lists we support joining
     get_vars = []  # list of get vars we want to store with the user
     extras = {}  # dict of hard-coded key/value pairs we want to store with the user
-    thanks_message = "Thanks for joining. We'll be in touch soon!"
+    thanks_message = "Thanks for joining the Democracy Club mailing list. We will be in touch soon!"
 
     backends = {
         'test': TestBackend(),
