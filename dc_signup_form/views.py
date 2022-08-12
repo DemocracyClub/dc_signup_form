@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.urls import reverse, NoReverseMatch
-from django.utils.http import is_safe_url
 from django.views.generic import FormView
 from .backends import (
     LocalDbBackend,
@@ -9,6 +8,13 @@ from .backends import (
 )
 
 
+def get_http(request, host): 
+    try:
+        from django.utils.http import is_safe_url
+        return is_safe_url(request, host)
+    except ImportError:
+        from django.utils.http import url_has_allowed_host_and_scheme
+        return url_has_allowed_host_and_scheme(request, host)
 class SignupFormView(FormView):
     mailing_lists = [
         'main_list', 'election_reminders'
@@ -42,9 +48,9 @@ class SignupFormView(FormView):
             election_reminders_signup_view = ''
 
         try:
-            source_url_safe = is_safe_url(source_url, allowed_hosts=None)
+            source_url_safe = get_http(source_url, allowed_hosts=None)
         except TypeError:
-            source_url_safe = is_safe_url(source_url)
+            source_url_safe = get_http(source_url)
         if source_url_safe and\
             source_url != mailing_list_signup_view and\
             source_url != election_reminders_signup_view:
