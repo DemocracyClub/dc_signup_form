@@ -1,12 +1,16 @@
 import os
 from setuptools import find_packages, setup
+import dc_signup_form
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
+def get_version():
+    return dc_signup_form.__version__
+
 setup(
     name='dc_signup_form',
-    version='2.1.1',
+    version=get_version(),
     author="chris48s",
     packages=find_packages(),
     include_package_data=True,
