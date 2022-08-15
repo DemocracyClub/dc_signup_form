@@ -14,7 +14,7 @@ setup(
     url='https://github.com/DemocracyClub/dc_signup_form',
     install_requires=[
         'requests',
-        'Django >=2.0,<3.3',
+        'Django >=2.0,<4.2',
         'psycopg2-binary',
     ],
     setup_requires=['wheel']
