@@ -7,13 +7,14 @@ try:
 except ImportError:
     from django.contrib.postgres.fields import JSONField 
 
+
 class BackwardsCompatibleJSONField(JSONField):
     # retained for legacy reasons
     # (this used to selectively support json/jsonb, but it doesn't any more)
     def db_type(self, connection):
-        return "jsonb" 
-     
-    
+        return "jsonb"
+
+
 class Token(models.Model):
     token = models.CharField(max_length=40, primary_key=True)
     app_name = models.CharField(max_length=100)

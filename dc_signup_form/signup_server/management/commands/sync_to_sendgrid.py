@@ -7,20 +7,19 @@ from dc_signup_form.signup_server.wrappers import DCSendGridWrapper
 
 
 class Command(BaseCommand):
-
     def get_unique_mailing_lists(self):
-        return SignupQueue\
-            .objects\
-            .all()\
-            .filter(added=False)\
-            .values('mailing_lists')\
-            .distinct('mailing_lists')
+        return (
+            SignupQueue.objects.all()
+            .filter(added=False)
+            .values("mailing_lists")
+            .distinct("mailing_lists")
+        )
 
     def get_new_users(self, mailing_lists):
         return SignupQueue.objects.all().filter(
             ~Q(email="testy.mctest@democracyclub.org.uk"),
             added=False,
-            mailing_lists=mailing_lists
+            mailing_lists=mailing_lists,
         )
 
     def handle(self, *args, **kwargs):
@@ -38,31 +37,32 @@ class Command(BaseCommand):
 
         for lsts in mailing_lists:
             # new signups for this combination of mailing lists
-            new_users = self.get_new_users(lsts['mailing_lists'])
+            new_users = self.get_new_users(lsts["mailing_lists"])
 
             # add users to contacts db
             response = sendgrid.add_users(
-                sendgrid.get_users_payload([user.data for user in new_users]))
+                sendgrid.get_users_payload([user.data for user in new_users])
+            )
 
             # It is possible some of the emails we've just POSTed worked
             # and some may have failed
-            if response['error_count'] > 0:
+            if response["error_count"] > 0:
                 # If there were any failures
                 # log them and exit with a non-zero status
                 # so we know to deal with it
                 exit_code = 1
-                for error in response['errors']:
-                    self.stderr.write(error['message'])
+                for error in response["errors"]:
+                    self.stderr.write(error["message"])
 
             # We still need to press on and add the ones that worked
             # to the relevant mailing lists.
             # We'll add any non-failed emails to each list in turn
-            for mailing_list in lsts['mailing_lists']:
+            for mailing_list in lsts["mailing_lists"]:
                 if mailing_list in sendgrid.SENDGRID_LISTS:
-                    if response['persisted_recipients']:
+                    if response["persisted_recipients"]:
                         sendgrid.add_users_to_lists(
-                            response['persisted_recipients'],
-                            sendgrid.SENDGRID_LISTS[mailing_list]
+                            response["persisted_recipients"],
+                            sendgrid.SENDGRID_LISTS[mailing_list],
                         )
                 else:
                     exit_code = 1
@@ -73,7 +73,7 @@ class Command(BaseCommand):
 
             # mark all the ones that worked as done
             for i, user in enumerate(new_users):
-                if i not in response['error_indices']:
+                if i not in response["error_indices"]:
                     user.added = True
                     user.save()
 
