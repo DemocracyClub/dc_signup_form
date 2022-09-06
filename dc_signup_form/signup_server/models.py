@@ -1,14 +1,18 @@
 import binascii
 import os
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+
+try:
+    from django.db.models import JSONField
+except ImportError:
+    from django.contrib.postgres.fields import JSONField 
 
 
 class BackwardsCompatibleJSONField(JSONField):
     # retained for legacy reasons
-    # (used to selectively support json/jsonb)
+    # (this used to selectively support json/jsonb, but it doesn't any more)
     def db_type(self, connection):
-        return 'jsonb'
+        return "jsonb"
 
 
 class Token(models.Model):

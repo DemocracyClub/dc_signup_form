@@ -10,26 +10,42 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='SignupQueue',
+            name="SignupQueue",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email', models.EmailField(max_length=254)),
-                ('data', dc_signup_form.signup_server.models.BackwardsCompatibleJSONField()),
-                ('mailing_lists', dc_signup_form.signup_server.models.BackwardsCompatibleJSONField()),
-                ('added', models.BooleanField(default=False)),
-                ('created', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("email", models.EmailField(max_length=254)),
+                (
+                    "data",
+                    dc_signup_form.signup_server.models.BackwardsCompatibleJSONField(),
+                ),
+                (
+                    "mailing_lists",
+                    dc_signup_form.signup_server.models.BackwardsCompatibleJSONField(),
+                ),
+                ("added", models.BooleanField(default=False)),
+                ("created", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Token',
+            name="Token",
             fields=[
-                ('token', models.CharField(max_length=40, primary_key=True, serialize=False)),
-                ('app_name', models.CharField(max_length=100)),
+                (
+                    "token",
+                    models.CharField(max_length=40, primary_key=True, serialize=False),
+                ),
+                ("app_name", models.CharField(max_length=100)),
             ],
         ),
     ]

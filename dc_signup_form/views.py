@@ -8,52 +8,62 @@ from .backends import (
 )
 
 
-def get_http(request, host): 
+def get_http(request, host):
     try:
         from django.utils.http import is_safe_url
+
         return is_safe_url(request, host)
     except ImportError:
         from django.utils.http import url_has_allowed_host_and_scheme
+
         return url_has_allowed_host_and_scheme(request, host)
+
+
 class SignupFormView(FormView):
     mailing_lists = [
-        'main_list', 'election_reminders'
+        "main_list",
+        "election_reminders",
     ]  # list of the mailing lists we support joining
     get_vars = []  # list of get vars we want to store with the user
     extras = {}  # dict of hard-coded key/value pairs we want to store with the user
-    thanks_message = "Thanks for joining the Democracy Club mailing list. We will be in touch soon!"
+    thanks_message = (
+        "Thanks for joining the Democracy Club mailing list. We will be in touch soon!"
+    )
 
     backends = {
-        'test': TestBackend(),
-        'local_db': LocalDbBackend(),
-        'remote_db': RemoteDbBackend(),
+        "test": TestBackend(),
+        "local_db": LocalDbBackend(),
+        "remote_db": RemoteDbBackend(),
     }
-    backend = 'remote_db'
+    backend = "remote_db"
 
     def get_success_url(self):
-        messages.success(
-            self.request, self.thanks_message)
+        messages.success(self.request, self.thanks_message)
 
-        source_url = self.request.POST.get('source_url')
+        source_url = self.request.POST.get("source_url")
 
         try:
             mailing_list_signup_view = reverse(
-                'dc_signup_form:mailing_list_signup_view')
+                "dc_signup_form:mailing_list_signup_view"
+            )
         except NoReverseMatch:
-            mailing_list_signup_view = ''
+            mailing_list_signup_view = ""
         try:
             election_reminders_signup_view = reverse(
-                'dc_signup_form:election_reminders_signup_view')
+                "dc_signup_form:election_reminders_signup_view"
+            )
         except NoReverseMatch:
-            election_reminders_signup_view = ''
+            election_reminders_signup_view = ""
 
         try:
             source_url_safe = get_http(source_url, allowed_hosts=None)
         except TypeError:
             source_url_safe = get_http(source_url)
-        if source_url_safe and\
-            source_url != mailing_list_signup_view and\
-            source_url != election_reminders_signup_view:
+        if (
+            source_url_safe
+            and source_url != mailing_list_signup_view
+            and source_url != election_reminders_signup_view
+        ):
             return source_url
         else:
             return "/"

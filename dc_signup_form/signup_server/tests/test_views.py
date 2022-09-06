@@ -5,25 +5,24 @@ from dc_signup_form.signup_server.views import email_signup
 
 
 class TestSignupView(TestCase):
-
     def setUp(self):
         self.factory = RequestFactory()
 
     def test_no_auth_header(self):
         req = self.factory.post(
-            '/foo/bar',
-            content_type='application/json',
-            data=json.dumps({'foo': 'bar'}),
+            "/foo/bar",
+            content_type="application/json",
+            data=json.dumps({"foo": "bar"}),
         )
         response = email_signup(req)
         self.assertEqual(403, response.status_code)
 
     def test_bad_auth_header(self):
         req = self.factory.post(
-            '/foo/bar',
-            content_type='application/json',
-            data=json.dumps({'foo': 'bar'}),
-            HTTP_AUTHORIZATION='foobar'
+            "/foo/bar",
+            content_type="application/json",
+            data=json.dumps({"foo": "bar"}),
+            HTTP_AUTHORIZATION="foobar",
         )
         response = email_signup(req)
         self.assertEqual(403, response.status_code)
@@ -33,17 +32,16 @@ class TestSignupView(TestCase):
         self.assertEqual(0, len(SignupQueue.objects.all()))
 
         token = Token()
-        token.app_name = 'myapp'
+        token.app_name = "myapp"
         token.save()
 
         req = self.factory.post(
-            '/foo/bar',
-            content_type='application/json',
-            data=json.dumps({
-                'data': {'email': 'foo@bar.baz'},
-                'mailing_lists': ['main_list']
-            }),
-            HTTP_AUTHORIZATION=token.token
+            "/foo/bar",
+            content_type="application/json",
+            data=json.dumps(
+                {"data": {"email": "foo@bar.baz"}, "mailing_lists": ["main_list"]}
+            ),
+            HTTP_AUTHORIZATION=token.token,
         )
         response = email_signup(req)
         self.assertEqual(201, response.status_code)
