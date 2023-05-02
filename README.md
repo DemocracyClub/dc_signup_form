@@ -126,3 +126,7 @@ or display the form inline:
   </div>
 {% endif %}
 ```
+
+## Tests
+
+run ```python run_tests.py```
