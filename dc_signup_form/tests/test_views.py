@@ -42,6 +42,32 @@ class TestView(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertEqual(1, len(SignupQueue.objects.all()))
 
+    def test_source_url (self):
+        # add a test to make sure the source url is 
+        # being passed through correctly
+        self.assertEqual(0, len(SignupQueue.objects.all()))
+        c = Client()
+        response = c.post(
+            "/emails/mailing_list/",
+            add_data_prefix(
+                MAILING_LIST_FORM_PREFIX,
+                {
+                    "source_url": "/emails/mailing_list/",
+                    "main_list": True,
+                    "full_name": "Chad Fernandez",
+                    "email": "chad@test.com",
+                    "mailing_list_form": "",
+                },
+            ),
+        )
+        self.assertEqual(302, response.status_code)
+        self.assertEqual(1, len(SignupQueue.objects.all()))
+        self.assertEqual("/emails/mailing_list/", SignupQueue.objects.all()[0].data["source_url"])
+        
+
+
+
+    
     def test_post_mailing_list_form_view_invalid(self):
         self.assertEqual(0, len(SignupQueue.objects.all()))
         c = Client()
