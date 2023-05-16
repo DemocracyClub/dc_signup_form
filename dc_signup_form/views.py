@@ -40,7 +40,8 @@ class SignupFormView(FormView):
     def get_success_url(self):
         messages.success(self.request, self.thanks_message)
 
-        source_url = self.request.POST.get("source_url")
+        form_name = self.get_form_class().prefix
+        source_url = self.request.POST.get(f"{form_name}-source_url") 
 
         try:
             mailing_list_signup_view = reverse(
@@ -56,7 +57,7 @@ class SignupFormView(FormView):
             election_reminders_signup_view = ""
 
         try:
-            source_url_safe = get_http(source_url, allowed_hosts=None)
+            source_url_safe = get_http(source_url, host=self.request.get_host())
         except TypeError:
             source_url_safe = get_http(source_url)
         if (
