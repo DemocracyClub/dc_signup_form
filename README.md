@@ -3,7 +3,11 @@
 [![Build Status](https://travis-ci.org/DemocracyClub/dc_signup_form.svg?branch=master)](https://travis-ci.org/DemocracyClub/dc_signup_form)
 [![Coverage Status](https://coveralls.io/repos/github/DemocracyClub/dc_signup_form/badge.svg?branch=master)](https://coveralls.io/github/DemocracyClub/dc_signup_form?branch=master)
 
-Django app with Email signup form for use on Democracy Club websites
+Django app with Email signup form for use on Democracy Club websites. Currently, this app is used on: 
+* [Democracy Club](https://democracyclub.org.uk)
+* [Who Can I Vote For?](https://whocanivotefor.co.uk)
+* [Where Do I Vote?](https://wheredoivote.co.uk)
+
 
 ## Installation
 
@@ -130,3 +134,4 @@ or display the form inline:
 ## Tests
 
 run ```python run_tests.py```
+
