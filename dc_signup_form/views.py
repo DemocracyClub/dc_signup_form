@@ -56,10 +56,8 @@ class SignupFormView(FormView):
         except NoReverseMatch:
             election_reminders_signup_view = ""
 
-        try:
-            source_url_safe = get_http(source_url, host=self.request.get_host())
-        except TypeError:
-            source_url_safe = get_http(source_url)
+        source_url_safe = get_http(source_url, host=self.request.get_host())
+        
         if (
             source_url_safe
             and source_url != mailing_list_signup_view
