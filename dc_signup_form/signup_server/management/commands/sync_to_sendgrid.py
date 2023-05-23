@@ -20,7 +20,8 @@ class Command(BaseCommand):
             ~Q(email="testy.mctest@democracyclub.org.uk"),
             added=False,
             mailing_lists=mailing_lists,
-        )
+        ).distinct("email")
+
 
     def handle(self, *args, **kwargs):
 
