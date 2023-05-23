@@ -1,7 +1,7 @@
 import sys
 import time
 from django.core.management.base import BaseCommand
-from django.db.models import Q
+from django.db.models import Q, Func, F
 from dc_signup_form.signup_server.models import SignupQueue
 from dc_signup_form.signup_server.wrappers import DCSendGridWrapper
 
@@ -16,15 +16,18 @@ class Command(BaseCommand):
         )
 
     def get_new_users(self, mailing_lists):
-        return SignupQueue.objects.all().filter(
-            ~Q(email="testy.mctest@democracyclub.org.uk"),
-            added=False,
-            mailing_lists=mailing_lists,
-        ).distinct("email")
-
+        return (
+            SignupQueue.objects.all()
+            .filter(
+                ~Q(email="testy.mctest@democracyclub.org.uk"),
+                added=False,
+                mailing_lists=mailing_lists,
+            )
+            .annotate(email_lower=Func(F("email"), function="lower"))
+            .distinct("email_lower")
+        )
 
     def handle(self, *args, **kwargs):
-
         # Assume we're going to finish sucessfully.
         # If any errors happen, we'll set an error code
         exit_code = 0
