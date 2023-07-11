@@ -31,8 +31,7 @@ class DCSendGridWrapper:
 
     def add_users(self, payload):
         url = self.BASE_URL + "/contactdb/recipients"
-        r = requests.post(url, data=json.dumps(payload), headers=self.headers)
-        # if we get a non-2xx status code, just raise it
+        r = requests.post(url, data=json.dumps(payload), headers=self.headers) 
         r.raise_for_status()
         return r.json()
 
@@ -51,3 +50,6 @@ class DCSendGridWrapper:
         # if we get a non-2xx status code, just raise it
         r.raise_for_status()
         # if success response payload wil be empty so there is no return val
+
+class SendGridAPIError(ValueError): 
+    pass

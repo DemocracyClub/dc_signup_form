@@ -3,7 +3,7 @@ import time
 from django.core.management.base import BaseCommand
 from django.db.models import Q, Func, F
 from dc_signup_form.signup_server.models import SignupQueue
-from dc_signup_form.signup_server.wrappers import DCSendGridWrapper
+from dc_signup_form.signup_server.wrappers import DCSendGridWrapper, SendGridAPIError
 
 
 class Command(BaseCommand):
@@ -44,9 +44,12 @@ class Command(BaseCommand):
             new_users = self.get_new_users(lsts["mailing_lists"])
 
             # add users to contacts db
-            response = sendgrid.add_users(
-                sendgrid.get_users_payload([user.data for user in new_users])
-            )
+            try:
+                response = sendgrid.add_users(
+                    sendgrid.get_users_payload([user.data for user in new_users])
+                )
+            except SendGridAPIError:
+                continue
 
             # It is possible some of the emails we've just POSTed worked
             # and some may have failed
