@@ -47,6 +47,20 @@ class TestForms(TestCase):
         self.assertIn("This field is required.", form.errors["full_name"])
         self.assertIn("email", form.errors)
         self.assertIn("Enter a valid email address.", form.errors["email"])
+    
+    def test_mailing_list_invalid_name(self):
+        data = add_data_prefix(
+            MAILING_LIST_FORM_PREFIX,
+            {
+                "full_name": "andrew@foo.com",  # @ in name
+                "email": "andrew@foo.com",  # not an email
+                "source_url": "http://foo.bar/baz",
+                "main_list": True,
+            },
+        )
+        form = MailingListSignupForm(data)
+        self.assertFalse(form.is_valid())
+        self.assertIn("Please enter your name, not your email address.", form.errors["full_name"])
 
     def test_mailing_list_required_fields(self):
         form = MailingListSignupForm(data={})
