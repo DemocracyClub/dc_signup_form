@@ -22,50 +22,42 @@ and we assume this is already set up on the project
 
 ## Configuration
 
-Using the remote backend (default):
+For all backends, `dc_signup_form` needs to be in `INSTALLED_APPS` and
+`dc_signup_form.context_processors.signup_form` needs to be added as a 
+context processor.
+
+
+Using AWS EventBridge (recommended):
 
 ```python
-INSTALLED_APPS = [
-    ...
-    'dc_signup_form',
-]
 
-TEMPLATES = [
-    {
-        ...
-        'OPTIONS': {
-            'context_processors': [
-                ...
-                'dc_signup_form.context_processors.signup_form',
-            ],
-        },
-    }
-]
+EMAIL_SIGNUP_BACKEND = "event_bridge"
+EMAIL_SIGNUP_BACKEND_KWARGS = {
+    "source": "NAME OF THIS SOURCE, e.g the project name",
+    "bus_arn": "[ARN of the event bridge bus. Take this from the dev handbook]"
+}
+
+```
+
+Note that `bus_arn` needs to change for dev, stage and prod accounts. It's 
+recomended to take this from the environment when running the app.
+
+Using the remote backend (deprecated):
+
+```python
 
 EMAIL_SIGNUP_API_KEY = 'f00b42'
 EMAIL_SIGNUP_ENDPOINT = 'https://foo.bar/baz/'
 ```
 
-Using the local backend:
+Using the local backend (deprecated):
 
 ```python
 INSTALLED_APPS = [
     ...
-    'dc_signup_form',
     'dc_signup_form.signup_server',
 ]
 
-TEMPLATES = [
-    {
-        ...
-        'OPTIONS': {
-            'context_processors': [
-                ...
-                'dc_signup_form.context_processors.signup_form',
-            ],
-        },
-    }
-]
 
 SENDGRID_API_KEY = 'f00b42'
 ```
@@ -136,4 +128,3 @@ or display the form inline:
 ## Tests
 
 run ```python run_tests.py```
-

@@ -1,5 +1,8 @@
+import boto3
 from django.test import TestCase
-from dc_signup_form.backends import LocalDbBackend
+from moto import mock_events
+
+from dc_signup_form.backends import LocalDbBackend, EventBridgeBackend
 from dc_signup_form.signup_server.views import SignupQueue
 
 
@@ -19,3 +22,14 @@ class TestLocalDbBackend(TestCase):
         backend = LocalDbBackend()
         with self.assertRaises(KeyError):
             backend.submit({"foo": "bar"}, ["main_list"])
+
+
+class TestEventBridgeBackend(TestCase):
+    @mock_events
+    def test_valid(self):
+        bus_arn_name = "arn:testing"
+        client = boto3.client("events", region_name="eu-west-2")
+        client.create_event_bus(Name=bus_arn_name)
+
+        backend = EventBridgeBackend(source="UnitTest", bus_arn="arn:testing")
+        backend.submit({"email": "foo@bar.baz", "full_name": "Test Face"}, ["main_list"])
