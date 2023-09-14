@@ -17,11 +17,12 @@ class TestView(TestCase):
         expected_strings = [
             '<input id="id_mailing_list_form-source_url" name="mailing_list_form-source_url" type="hidden" value="/emails/mailing_list/" />',
             '<input id="id_mailing_list_form-main_list" name="mailing_list_form-main_list" type="hidden" value="True" />',
-            '<input class=" form-control" id="id_mailing_list_form-full_name" maxlength="1000" name="mailing_list_form-full_name" type="text" required />',
-            '<input class=" form-control" id="id_mailing_list_form-email" maxlength="255" name="mailing_list_form-email" type="email" required />',
+            '<input type="text" name="mailing_list_form-full_name" autocomplete="off" pattern="[^@]+" title="Please enter your full name, not your email address." maxlength="1000" class="" required="" id="id_mailing_list_form-full_name">',
+            '<input type="email" name="mailing_list_form-email" maxlength="255" class="" required="" id="id_mailing_list_form-email">',
         ]
         for string in expected_strings:
-            self.assertContains(response, string, html=True)
+            with self.subTest(string=string):
+                self.assertContains(response, string, html=True)
 
     def test_post_mailing_list_form_view_valid(self):
         self.assertEqual(0, len(SignupQueue.objects.all()))
@@ -88,7 +89,7 @@ class TestView(TestCase):
         form = response.context[MAILING_LIST_FORM_PREFIX]
         self.assertFalse(form.is_valid())
         self.assertEqual(200, response.status_code)
-        self.assertIn('<div class="form-group has-error">', str(response.content))
+        self.assertIn('<div class="ds-error">', str(response.content))
         self.assertEqual(0, len(SignupQueue.objects.all()))
 
     def test_get_election_reminders_form_view(self):
@@ -98,12 +99,13 @@ class TestView(TestCase):
         expected_strings = [
             '<input id="id_election_reminders_form-source_url" name="election_reminders_form-source_url" type="hidden" value="/emails/election_reminders/" />',
             '<input id="id_election_reminders_form-election_reminders" name="election_reminders_form-election_reminders" type="hidden" value="True" />',
-            '<input class=" form-control" id="id_election_reminders_form-full_name" maxlength="1000" name="election_reminders_form-full_name" type="text" required />',
-            '<input class=" form-control" id="id_election_reminders_form-email" maxlength="255" name="election_reminders_form-email" type="email" required />',
+            '<input type="text" name="election_reminders_form-full_name" autocomplete="off" pattern="[^@]+" title="Please enter your full name, not your email address." maxlength="1000" class="" required id="id_election_reminders_form-full_name">',
+            '<input type="email" name="election_reminders_form-email" maxlength="255" class="" required id="id_election_reminders_form-email">',
             '<input id="id_election_reminders_form-main_list" name="election_reminders_form-main_list" type="checkbox" />',
         ]
         for string in expected_strings:
-            self.assertContains(response, string, html=True)
+            with self.subTest(string=string):
+                self.assertContains(response, string, html=True)
 
     def test_post_election_reminders_form_view_valid(self):
         self.assertEqual(0, len(SignupQueue.objects.all()))
@@ -140,5 +142,5 @@ class TestView(TestCase):
             },
         )
         self.assertEqual(200, response.status_code)
-        self.assertIn('<div class="form-group has-error">', str(response.content))
+        self.assertIn('<div class="ds-error">', str(response.content))
         self.assertEqual(0, len(SignupQueue.objects.all()))

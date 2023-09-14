@@ -14,9 +14,11 @@ Django app with Email signup form for use on Democracy Club websites. Currently,
 Add to project requirements:
 
 ```
-git+git://github.com/DemocracyClub/dc_base_theme.git
 git+git://github.com/DemocracyClub/dc_signup_form.git
 ```
+
+This project depends on [`dc_django_utils`](https://github.com/DemocracyClub/dc_django_utils) 
+and we assume this is already set up on the project
 
 ## Configuration
 

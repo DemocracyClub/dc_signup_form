@@ -60,7 +60,7 @@ class TestForms(TestCase):
         )
         form = MailingListSignupForm(data)
         self.assertFalse(form.is_valid())
-        self.assertIn("Please enter your name, not your email address.", form.errors["full_name"])
+        self.assertIn("Please enter your full name, not your email address.", form.errors["full_name"])
 
     def test_mailing_list_required_fields(self):
         form = MailingListSignupForm(data={})
