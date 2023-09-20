@@ -5,6 +5,7 @@ from .backends import (
     LocalDbBackend,
     RemoteDbBackend,
     TestBackend,
+    EventBridgeBackend,
 )
 
 
@@ -31,11 +32,13 @@ class SignupFormView(FormView):
     )
 
     backends = {
-        "test": TestBackend(),
-        "local_db": LocalDbBackend(),
-        "remote_db": RemoteDbBackend(),
+        "test": TestBackend,
+        "local_db": LocalDbBackend,
+        "remote_db": RemoteDbBackend,
+        "event_bridge": EventBridgeBackend,
     }
     backend = "remote_db"
+    backend_kwargs = {}
 
     def get_success_url(self):
         messages.success(self.request, self.thanks_message)
@@ -100,6 +103,6 @@ class SignupFormView(FormView):
 
         # pass the payload off to a backend object
         # to deal with persisting the data to a db
-        self.backends[self.backend].submit(data, mailing_lists)
+        self.backends[self.backend](**self.backend_kwargs).submit(data, mailing_lists)
 
         return super(SignupFormView, self).form_valid(form)

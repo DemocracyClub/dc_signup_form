@@ -25,7 +25,7 @@ if not settings.configured:
         INSTALLED_APPS=(
             "django.contrib.contenttypes",
             "django.contrib.staticfiles",
-            "dc_theme",
+            "dc_utils",
             "test_project",
             "dc_signup_form",
             "dc_signup_form.signup_server",
@@ -41,7 +41,7 @@ if not settings.configured:
                 "OPTIONS": {
                     "debug": True,
                     "context_processors": [
-                        "dc_theme.context_processors.dc_theme_context",
+                        "dc_utils.context_processors.dc_django_utils",
                         "dc_signup_form.context_processors.signup_form",
                     ],
                 },
@@ -51,6 +51,7 @@ if not settings.configured:
             "django.contrib.sessions.middleware.SessionMiddleware",
             "django.contrib.messages.middleware.MessageMiddleware",
         ],
+        SECRET_KEY="testing_key"
     )
 
 django.setup()

@@ -26,4 +26,8 @@ setup(
         'psycopg2-binary',
     ],
     setup_requires=["wheel"],
+    # We don't want to force boto3 for all installs
+    # For example AWS Lambda already has it by default.
+    # Mark as optional
+    extras_require={'boto': ['boto3']}
 )
