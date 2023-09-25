@@ -21,13 +21,13 @@ setup(
     description="Email Signup form component for use on DC websites",
     url="https://github.com/DemocracyClub/dc_signup_form",
     install_requires=[
-        'requests',
-        'Django >=3.2,<4.3',
-        'psycopg2-binary',
+        "requests",
+        "Django >=3.2,<4.3",
+        "psycopg2-binary",
     ],
     setup_requires=["wheel"],
     # We don't want to force boto3 for all installs
     # For example AWS Lambda already has it by default.
     # Mark as optional
-    extras_require={'boto': ['boto3']}
+    extras_require={"boto": ["boto3"]},
 )

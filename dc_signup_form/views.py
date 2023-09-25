@@ -2,8 +2,6 @@ from django.contrib import messages
 from django.urls import reverse, NoReverseMatch
 from django.views.generic import FormView
 from .backends import (
-    LocalDbBackend,
-    RemoteDbBackend,
     TestBackend,
     EventBridgeBackend,
 )
@@ -33,8 +31,6 @@ class SignupFormView(FormView):
 
     backends = {
         "test": TestBackend,
-        "local_db": LocalDbBackend,
-        "remote_db": RemoteDbBackend,
         "event_bridge": EventBridgeBackend,
     }
     backend = "remote_db"
@@ -44,7 +40,7 @@ class SignupFormView(FormView):
         messages.success(self.request, self.thanks_message)
 
         form_name = self.get_form_class().prefix
-        source_url = self.request.POST.get(f"{form_name}-source_url") 
+        source_url = self.request.POST.get(f"{form_name}-source_url")
 
         try:
             mailing_list_signup_view = reverse(
@@ -60,7 +56,7 @@ class SignupFormView(FormView):
             election_reminders_signup_view = ""
 
         source_url_safe = get_http(source_url, host=self.request.get_host())
-        
+
         if (
             source_url_safe
             and source_url != mailing_list_signup_view
@@ -89,7 +85,7 @@ class SignupFormView(FormView):
 
         # mailing lists
         for lst in self.mailing_lists:
-            key = "-".join([self.form_class.prefix, lst])
+            "-".join([self.form_class.prefix, lst])
             if data.pop(lst, False):
                 mailing_lists.append(lst)
 

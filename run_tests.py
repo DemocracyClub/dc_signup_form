@@ -7,7 +7,8 @@ from django.test.utils import get_runner
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-root = lambda *x: os.path.join(BASE_DIR, *x)
+def root(*x):
+    return os.path.join(BASE_DIR, *x)
 
 if not settings.configured:
     settings.configure(
@@ -28,7 +29,6 @@ if not settings.configured:
             "dc_utils",
             "test_project",
             "dc_signup_form",
-            "dc_signup_form.signup_server",
         ),
         ROOT_URLCONF="test_project.urls",
         TEMPLATES=[
@@ -51,7 +51,7 @@ if not settings.configured:
             "django.contrib.sessions.middleware.SessionMiddleware",
             "django.contrib.messages.middleware.MessageMiddleware",
         ],
-        SECRET_KEY="testing_key"
+        SECRET_KEY="testing_key",
     )
 
 django.setup()

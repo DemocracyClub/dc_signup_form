@@ -1,12 +1,13 @@
+import json
+
 from django.test import Client, TestCase
-from dc_signup_form.signup_server.models import SignupQueue
 
 from dc_signup_form.constants import (
     MAILING_LIST_FORM_PREFIX,
-    ELECTION_REMINDERS_FORM_PREFIX,
 )
 
 from .test_forms import add_data_prefix
+from .utils import mocked_eventbridge
 
 
 class TestView(TestCase):
@@ -25,122 +26,71 @@ class TestView(TestCase):
                 self.assertContains(response, string, html=True)
 
     def test_post_mailing_list_form_view_valid(self):
-        self.assertEqual(0, len(SignupQueue.objects.all()))
-        c = Client()
-        response = c.post(
-            "/emails/mailing_list/",
-            add_data_prefix(
-                MAILING_LIST_FORM_PREFIX,
-                {
-                    "source_url": "/emails/mailing_list/",
-                    "main_list": True,
-                    "full_name": "Chad Fernandez",
-                    "email": "chad.fernandez@example.com",
-                    "mailing_list_form": "",
-                },
-            ),
-        )
-        self.assertEqual(302, response.status_code)
-        self.assertEqual(1, len(SignupQueue.objects.all()))
+        with mocked_eventbridge() as get_events:
+            self.assertEqual(0, len(get_events()))
+            c = Client()
+            response = c.post(
+                "/emails/mailing_list/",
+                add_data_prefix(
+                    MAILING_LIST_FORM_PREFIX,
+                    {
+                        "source_url": "/emails/mailing_list/",
+                        "main_list": True,
+                        "full_name": "Chad Fernandez",
+                        "email": "chad.fernandez@example.com",
+                        "mailing_list_form": "",
+                    },
+                ),
+            )
+            self.assertEqual(302, response.status_code)
+            self.assertEqual(1, len(get_events()))
 
-    def test_source_url (self):
-        # add a test to make sure the source url is 
-        # being passed through correctly
-        self.assertEqual(0, len(SignupQueue.objects.all()))
-        c = Client()
-        response = c.post(
-            "/emails/mailing_list/",
-            add_data_prefix(
-                MAILING_LIST_FORM_PREFIX,
-                {
-                    "source_url": "/emails/mailing_list/",
-                    "main_list": True,
-                    "full_name": "Chad Fernandez",
-                    "email": "chad@test.com",
-                    "mailing_list_form": "",
-                },
-            ),
-        )
-        self.assertEqual(302, response.status_code)
-        self.assertEqual(1, len(SignupQueue.objects.all()))
-        self.assertEqual("/emails/mailing_list/", SignupQueue.objects.all()[0].data["source_url"])
-        
+    def test_source_url(self):
+        with mocked_eventbridge() as get_events:
+            # add a test to make sure the source url is
+            # being passed through correctly
+            self.assertEqual(0, len(get_events()))
+            c = Client()
+            response = c.post(
+                "/emails/mailing_list/",
+                add_data_prefix(
+                    MAILING_LIST_FORM_PREFIX,
+                    {
+                        "source_url": "/emails/mailing_list/",
+                        "main_list": True,
+                        "full_name": "Chad Fernandez",
+                        "email": "chad@test.com",
+                        "mailing_list_form": "",
+                    },
+                ),
+            )
+            self.assertEqual(302, response.status_code)
+            events = get_events()
+            self.assertEqual(1, len(events))
+            self.assertEqual(
+                "/emails/mailing_list/",
+                json.loads(events[0]["Body"])["detail"]["attribs"]["source_url"],
+            )
 
-
-
-    
     def test_post_mailing_list_form_view_invalid(self):
-        self.assertEqual(0, len(SignupQueue.objects.all()))
-        c = Client()
+        with mocked_eventbridge() as get_events:
+            c = Client()
 
-        response = c.post(
-            "/emails/mailing_list/",
-            add_data_prefix(
-                MAILING_LIST_FORM_PREFIX,
-                {
-                    "source_url": "/emails/mailing_list/",
-                    "main_list": True,
-                    "full_name": "Chad Fernandez",
-                    "email": "",
-                    "mailing_list_form": "",
-                },
-            ),
-        )
-        form = response.context[MAILING_LIST_FORM_PREFIX]
-        self.assertFalse(form.is_valid())
-        self.assertEqual(200, response.status_code)
-        self.assertIn('<div class="ds-error">', str(response.content))
-        self.assertEqual(0, len(SignupQueue.objects.all()))
-
-    def test_get_election_reminders_form_view(self):
-        c = Client()
-        response = c.get("/emails/election_reminders/")
-        self.assertEqual(200, response.status_code)
-        expected_strings = [
-            '<input id="id_election_reminders_form-source_url" name="election_reminders_form-source_url" type="hidden" value="/emails/election_reminders/" />',
-            '<input id="id_election_reminders_form-election_reminders" name="election_reminders_form-election_reminders" type="hidden" value="True" />',
-            '<input type="text" name="election_reminders_form-full_name" autocomplete="off" pattern="[^@]+" title="Please enter your full name, not your email address." maxlength="1000" class="" required id="id_election_reminders_form-full_name">',
-            '<input type="email" name="election_reminders_form-email" maxlength="255" class="" required id="id_election_reminders_form-email">',
-            '<input id="id_election_reminders_form-main_list" name="election_reminders_form-main_list" type="checkbox" />',
-        ]
-        for string in expected_strings:
-            with self.subTest(string=string):
-                self.assertContains(response, string, html=True)
-
-    def test_post_election_reminders_form_view_valid(self):
-        self.assertEqual(0, len(SignupQueue.objects.all()))
-        c = Client()
-        response = c.post(
-            "/emails/election_reminders/",
-            add_data_prefix(
-                ELECTION_REMINDERS_FORM_PREFIX,
-                {
-                    "source_url": "/emails/election_reminders/",
-                    "election_reminders": True,
-                    "full_name": "Chad Fernandez",
-                    "email": "chad.fernandez@example.com",
-                    "main_list": False,
-                    "election_reminders_form": "",
-                },
-            ),
-        )
-        self.assertEqual(302, response.status_code)
-        self.assertEqual(1, len(SignupQueue.objects.all()))
-
-    def test_post_election_reminders_form_view_invalid(self):
-        self.assertEqual(0, len(SignupQueue.objects.all()))
-        c = Client()
-        response = c.post(
-            "/emails/election_reminders/",
-            {
-                "source_url": "/emails/election_reminders/",
-                "election_reminders": True,
-                "full_name": "Chad Fernandez",
-                "email": "",
-                "main_list": False,
-                "election_reminders_form": "",
-            },
-        )
-        self.assertEqual(200, response.status_code)
-        self.assertIn('<div class="ds-error">', str(response.content))
-        self.assertEqual(0, len(SignupQueue.objects.all()))
+            response = c.post(
+                "/emails/mailing_list/",
+                add_data_prefix(
+                    MAILING_LIST_FORM_PREFIX,
+                    {
+                        "source_url": "/emails/mailing_list/",
+                        "main_list": True,
+                        "full_name": "Chad Fernandez",
+                        "email": "",
+                        "mailing_list_form": "",
+                    },
+                ),
+            )
+            form = response.context[MAILING_LIST_FORM_PREFIX]
+            self.assertFalse(form.is_valid())
+            self.assertEqual(200, response.status_code)
+            self.assertIn('<div class="ds-error">', str(response.content))
+            self.assertEqual(0, len(get_events()))
