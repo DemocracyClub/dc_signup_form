@@ -1,6 +1,6 @@
 # DC Signup Form
 
-[![Coverage Status](https://coveralls.io/repos/github/DemocracyClub/dc_signup_form/badge.svg?branch=master)](https://coveralls.io/github/DemocracyClub/dc_signup_form?branch=master)
+![Tests](https://github.com/DemocracyClub/dc_signup_form/actions/workflows/run_tests.yaml/badge.svg) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 Django app with Email signup form for use on Democracy Club websites. Currently, this app is used on: 
 * [Democracy Club](https://democracyclub.org.uk)
