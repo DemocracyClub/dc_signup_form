@@ -1,5 +1,5 @@
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 
 
 class TestBackend:
@@ -29,7 +29,7 @@ class EmailSubscriber:
             raise ValueError("Name cannot contain an email address")
         if not isinstance(self.list_uuids, list):
             raise ValueError("'list_uuids' must be a list")
-        self.list_uuids = list([int(x) for x in self.list_uuids])
+        self.list_uuids = [int(x) for x in self.list_uuids]
 
     def as_listmonk_json(self):
         if self.source:
@@ -48,7 +48,9 @@ class EmailSubscriber:
 class EventBridgeBackend:
     def __init__(self, source=None, bus_arn=None):
         if not source:
-            raise ValueError("'source' required. This should be the project name")
+            raise ValueError(
+                "'source' required. This should be the project name"
+            )
 
         self.source = source
 
@@ -88,9 +90,12 @@ class EventBridgeBackend:
 
     def submit(self, data, mailing_lists):
         list_id_map = self.list_name_to_list_id(self.dev_mode)
-        list_ids = list([list_id_map[list_name] for list_name in mailing_lists])
+        list_ids = [list_id_map[list_name] for list_name in mailing_lists]
         subscriber = EmailSubscriber(
-            email=data["email"], name=data["full_name"], list_uuids=list_ids, source=data.get("source_url")
+            email=data["email"],
+            name=data["full_name"],
+            list_uuids=list_ids,
+            source=data.get("source_url"),
         )
 
         self.client.put_events(

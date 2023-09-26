@@ -3,7 +3,6 @@ from django.urls import include, re_path
 from dc_signup_form.forms import MailingListSignupForm
 from dc_signup_form.views import SignupFormView
 
-
 email_patterns = [
     re_path(
         r"^mailing_list/$",

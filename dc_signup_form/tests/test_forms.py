@@ -1,8 +1,9 @@
 from django.test import TestCase
-from dc_signup_form.forms import MailingListSignupForm
+
 from dc_signup_form.constants import (
     MAILING_LIST_FORM_PREFIX,
 )
+from dc_signup_form.forms import MailingListSignupForm
 
 
 def add_data_prefix(prefix, data):

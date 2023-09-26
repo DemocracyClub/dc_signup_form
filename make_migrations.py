@@ -2,7 +2,6 @@ import django
 from django.conf import settings
 from django.core.management import call_command
 
-
 if not settings.configured:
     settings.configure(
         DEBUG=True,

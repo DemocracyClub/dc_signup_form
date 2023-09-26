@@ -1,9 +1,10 @@
 from django.contrib import messages
-from django.urls import reverse, NoReverseMatch
+from django.urls import NoReverseMatch, reverse
 from django.views.generic import FormView
+
 from .backends import (
-    TestBackend,
     EventBridgeBackend,
+    TestBackend,
 )
 
 
@@ -24,10 +25,10 @@ class SignupFormView(FormView):
         "election_reminders",
     ]  # list of the mailing lists we support joining
     get_vars = []  # list of get vars we want to store with the user
-    extras = {}  # dict of hard-coded key/value pairs we want to store with the user
-    thanks_message = (
-        "Thanks for joining the Democracy Club mailing list. We will be in touch soon!"
-    )
+    extras = (
+        {}
+    )  # dict of hard-coded key/value pairs we want to store with the user
+    thanks_message = "Thanks for joining the Democracy Club mailing list. We will be in touch soon!"
 
     backends = {
         "test": TestBackend,
@@ -63,8 +64,7 @@ class SignupFormView(FormView):
             and source_url != election_reminders_signup_view
         ):
             return source_url
-        else:
-            return "/"
+        return "/"
 
     def form_invalid(self, form):
         """
@@ -99,6 +99,8 @@ class SignupFormView(FormView):
 
         # pass the payload off to a backend object
         # to deal with persisting the data to a db
-        self.backends[self.backend](**self.backend_kwargs).submit(data, mailing_lists)
+        self.backends[self.backend](**self.backend_kwargs).submit(
+            data, mailing_lists
+        )
 
         return super(SignupFormView, self).form_valid(form)

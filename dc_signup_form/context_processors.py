@@ -1,5 +1,5 @@
-from .forms import MailingListSignupForm
 from .constants import MAILING_LIST_FORM_PREFIX
+from .forms import MailingListSignupForm
 
 
 def signup_form(request):

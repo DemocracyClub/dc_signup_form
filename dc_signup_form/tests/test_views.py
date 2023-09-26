@@ -69,7 +69,9 @@ class TestView(TestCase):
             self.assertEqual(1, len(events))
             self.assertEqual(
                 "/emails/mailing_list/",
-                json.loads(events[0]["Body"])["detail"]["attribs"]["source_url"],
+                json.loads(events[0]["Body"])["detail"]["attribs"][
+                    "source_url"
+                ],
             )
 
     def test_post_mailing_list_form_view_invalid(self):
