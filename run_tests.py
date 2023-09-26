@@ -18,12 +18,8 @@ if not settings.configured:
         DEBUG=True,
         DATABASES={
             "default": {
-                "ENGINE": "django.db.backends.postgresql_psycopg2",
-                "NAME": "test",
-                "USER": "postgres",
-                "PASSWORD": "",
-                "HOST": "",
-                "PORT": "",
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": "test_db",
             }
         },
         INSTALLED_APPS=(
