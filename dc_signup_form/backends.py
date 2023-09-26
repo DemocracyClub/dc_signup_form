@@ -1,8 +1,5 @@
-from dataclasses import dataclass
-import requests
 import json
-from django.conf import settings
-from dc_signup_form.signup_server.models import SignupQueue
+from dataclasses import dataclass
 
 
 class TestBackend:
@@ -13,30 +10,6 @@ class TestBackend:
                 "mailing_lists": mailing_lists,
             }
         )
-
-
-class LocalDbBackend:
-    def submit(self, data, mailing_lists):
-        record = SignupQueue(
-            email=data["email"], data=data, mailing_lists=mailing_lists
-        )
-        record.save()
-
-
-class RemoteDbBackend:
-    def submit(self, data, mailing_lists):
-        key = getattr(settings, "EMAIL_SIGNUP_API_KEY", "")
-        url = getattr(settings, "EMAIL_SIGNUP_ENDPOINT", "")
-
-        headers = {"Authorization": key}
-
-        payload = {
-            "data": data,
-            "mailing_lists": mailing_lists,
-        }
-
-        r = requests.post(url, data=json.dumps(payload), headers=headers)
-        r.raise_for_status()
 
 
 @dataclass
@@ -56,9 +29,13 @@ class EmailSubscriber:
             raise ValueError("Name cannot contain an email address")
         if not isinstance(self.list_uuids, list):
             raise ValueError("'list_uuids' must be a list")
-        self.list_uuids = list([int(x) for x in self.list_uuids])
+        self.list_uuids = [int(x) for x in self.list_uuids]
 
     def as_listmonk_json(self):
+        if self.source:
+            if not self.extra_context:
+                self.extra_context = {}
+            self.extra_context["source_url"] = self.source
         return {
             "email": self.email,
             "name": self.name,
@@ -71,7 +48,9 @@ class EmailSubscriber:
 class EventBridgeBackend:
     def __init__(self, source=None, bus_arn=None):
         if not source:
-            raise ValueError("'source' required. This should be the project name")
+            raise ValueError(
+                "'source' required. This should be the project name"
+            )
 
         self.source = source
 
@@ -111,10 +90,12 @@ class EventBridgeBackend:
 
     def submit(self, data, mailing_lists):
         list_id_map = self.list_name_to_list_id(self.dev_mode)
-        list_ids = list([list_id_map[list_name] for list_name in mailing_lists])
-
+        list_ids = [list_id_map[list_name] for list_name in mailing_lists]
         subscriber = EmailSubscriber(
-            email=data["email"], name=data["full_name"], list_uuids=list_ids
+            email=data["email"],
+            name=data["full_name"],
+            list_uuids=list_ids,
+            source=data.get("source_url"),
         )
 
         self.client.put_events(

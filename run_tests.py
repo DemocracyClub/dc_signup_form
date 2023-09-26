@@ -1,25 +1,25 @@
 #!/usr/bin/env python
 import os
 import sys
+
 import django
 from django.conf import settings
 from django.test.utils import get_runner
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-root = lambda *x: os.path.join(BASE_DIR, *x)
+
+
+def root(*x):
+    return os.path.join(BASE_DIR, *x)
+
 
 if not settings.configured:
     settings.configure(
         DEBUG=True,
         DATABASES={
             "default": {
-                "ENGINE": "django.db.backends.postgresql_psycopg2",
-                "NAME": "test",
-                "USER": "postgres",
-                "PASSWORD": "",
-                "HOST": "",
-                "PORT": "",
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": "test_db",
             }
         },
         INSTALLED_APPS=(
@@ -28,7 +28,6 @@ if not settings.configured:
             "dc_utils",
             "test_project",
             "dc_signup_form",
-            "dc_signup_form.signup_server",
         ),
         ROOT_URLCONF="test_project.urls",
         TEMPLATES=[
@@ -51,7 +50,7 @@ if not settings.configured:
             "django.contrib.sessions.middleware.SessionMiddleware",
             "django.contrib.messages.middleware.MessageMiddleware",
         ],
-        SECRET_KEY="testing_key"
+        SECRET_KEY="testing_key",
     )
 
 django.setup()
