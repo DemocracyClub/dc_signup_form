@@ -1,12 +1,11 @@
 # DC Signup Form
 
-[![Build Status](https://travis-ci.org/DemocracyClub/dc_signup_form.svg?branch=master)](https://travis-ci.org/DemocracyClub/dc_signup_form)
 [![Coverage Status](https://coveralls.io/repos/github/DemocracyClub/dc_signup_form/badge.svg?branch=master)](https://coveralls.io/github/DemocracyClub/dc_signup_form?branch=master)
 
 Django app with Email signup form for use on Democracy Club websites. Currently, this app is used on: 
 * [Democracy Club](https://democracyclub.org.uk)
 * [Who Can I Vote For?](https://whocanivotefor.co.uk)
-* [Where Do I Vote?](https://wheredoivote.co.uk)
+
 
 
 ## Installation
@@ -18,16 +17,17 @@ git+git://github.com/DemocracyClub/dc_signup_form.git
 ```
 
 This project depends on [`dc_django_utils`](https://github.com/DemocracyClub/dc_django_utils) 
-and we assume this is already set up on the project
+and we assume this is already set up on the project.
+
+For deployments in AWS you need to ensure that the role has 
+`events:put_events` permission on the EventBridge ARN.
 
 ## Configuration
 
-For all backends, `dc_signup_form` needs to be in `INSTALLED_APPS` and
+`dc_signup_form` needs to be in `INSTALLED_APPS` and
 `dc_signup_form.context_processors.signup_form` needs to be added as a 
 context processor.
 
-
-Using AWS EventBridge (recommended):
 
 ```python
 
@@ -40,45 +40,15 @@ EMAIL_SIGNUP_BACKEND_KWARGS = {
 ```
 
 Note that `bus_arn` needs to change for dev, stage and prod accounts. It's 
-recomended to take this from the environment when running the app.
+recommended to take this from the environment when running the app.
 
-Using the remote backend (deprecated):
-
-```python
-
-EMAIL_SIGNUP_API_KEY = 'f00b42'
-EMAIL_SIGNUP_ENDPOINT = 'https://foo.bar/baz/'
-```
-
-Using the local backend (deprecated):
-
-```python
-INSTALLED_APPS = [
-    ...
-    'dc_signup_form.signup_server',
-]
-
-
-SENDGRID_API_KEY = 'f00b42'
-```
 
 ## Usage
 
-Default routes:
-
-```python
-url(r'^emails/', include('dc_signup_form.urls')),
-```
-
-Routes for local backend:
-```python
-url(r'^emails/api_signup/', include('dc_signup_form.signup_server.urls')),
-```
-
-Custom routes:
 
 ```python
 from dc_signup_form.views import SignupFormView
+from dc_signup_form.forms import MailingListSignupForm
 
 email_urls = [
     url(r'^$',
@@ -90,7 +60,8 @@ email_urls = [
                 'source': 'EveryElection',
             },
             thanks_message="My custom thanks message",
-            backend='local_db'
+            backend='event_bridge',
+            backend_kwargs=settings.EMAIL_SIGNUP_BACKEND_KWARGS
         ),
         name='mailing_list_signup_view'),
 ]
