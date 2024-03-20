@@ -3,5 +3,5 @@ https://github.com/DemocracyClub/dc_django_utils/archive/refs/tags/2.4.0.tar.gz
 django-localflavor==4.0
 boto3
 moto==4.2.2
-black==23.9.1
+black==24.3.0
 ruff==0.0.291
